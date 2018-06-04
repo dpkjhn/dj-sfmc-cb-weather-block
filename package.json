@@ -23,6 +23,9 @@
         "ejs": "^2.6.1",
         "express": "^4.16.3",
         "npm": "^6.0.1",
-        "path": "^0.12.7"
+        "path": "^0.12.7",
+        "request": "^2.87.0",
+        "request-promise-native": "^1.0.5",
+        "webshot": "^0.18.0"
     }
 }
