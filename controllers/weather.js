@@ -1,6 +1,13 @@
-const webshot = require('webshot');
 const path = require('path');
+const {
+    promisify
+} = require('util');
+const fs = require('fs');
 const rp = require('request-promise-native');
+const ci = require('../lib/createImage');
+const st = require('../lib/createMarkup');
+
+const readFileAsync = promisify(fs.readFile);
 
 const locationInfo = {
     location: 'London',
@@ -10,15 +17,8 @@ const locationInfo = {
     weather: {}
 };
 
-let createImage = (htmlContent, cb) => {
-    let stream = webshot(htmlContent, {
-        siteType: 'html'
-    });
 
-    stream.on('data', data => {
-        cb(data);
-    });
-};
+
 
 let fetchWeather = async(location, country, units) => {
     const url = `http://api.openweathermap.org/data/2.5/weather`;
@@ -27,37 +27,50 @@ let fetchWeather = async(location, country, units) => {
     let queryByCityId = `q=${location},${country}&units=${units}&appid=${process.env.OPENWEATHER_API}`;
     let queryByZip = `zip=${location},${country}&units=${units}&appid=${process.env.OPENWEATHER_API}`;
 
+    // console.log(queryByCityName);
+
     let weatherRequest = url.concat('?', queryByCityName);
     let weather = {};
 
     try {
         weather = await rp(weatherRequest);
-        return weather;
+        // console.log(weather);
+
+        return JSON.parse(weather);
+        // return weather;
     } catch (err) {
         console.log(err.message);
         return {};
     }
 }
 
+let parseTemplate = (template, attr) => {
+
+    return readFileAsync(path.join(__dirname, `../public/${template}.html`), 'utf8').then((text) => {
+        return st.createMarkup(text, attr);
+    });
+}
+
+
 exports.index = async(req, res) => {
     let str = 'Error fetching weather!!';
 
     try {
-        let weather = JSON.parse(await fetchWeather(req.params.location, req.params.country, 'metric'));
+        let weather = await fetchWeather(req.query.location, req.query.country, 'metric');
+        // str = `<html><body>Weather for <b>${weather.name} </b> is <b>${weather.main.temp} </b></body></html>`;
 
-        str = `<html><body>Weather for <b>${weather.name} </b> is <b>${weather.main.temp} </b></body></html>`;
+        str = await parseTemplate('template1', weather);
 
-        createImage(str, (stream) => {
-            var img = new Buffer(stream, 'base64');
-
-            res.writeHead(200, {
-                'Content-Type': 'image/png',
-                'Content-Length': img.length
-            });
-
-            res.end(img);
-        });
-    } catch (err) {
         console.log(str);
+
+
+        let img = await ci.createHtmlImage(str, 200, 200);
+
+        res.contentType('image/png');
+        res.contentLength = img.length;
+        res.end(img);
+
+    } catch (err) {
+        console.log(err);
     }
 };
