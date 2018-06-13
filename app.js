@@ -17,7 +17,7 @@ app.get('/', homeController.index);
 app.get('/weather/:country/:location?', weatherController.index);
 app.get('/weather.png?', weatherController.index);
 app.use('*', (req, res) => {
-    res.send(404);
+    res.sendStatus(404);
 });
 
 app.use('/public', express.static(path.join(__dirname, 'public')));

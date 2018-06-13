@@ -9,44 +9,74 @@ const st = require('../lib/createMarkup');
 
 const readFileAsync = promisify(fs.readFile);
 
-const locationInfo = {
+const defaultWeatherInfo = {
     location: 'London',
+    zip: 'EC2N 4AY',
+    cityid: '',
     country: 'UK',
-    type: '1day',
     units: 'metric',
-    weather: {}
+    temp: '',
+    tempStr: '',
+    icon: '',
+    type: '1day'
 };
 
 
 
 
-let fetchWeather = async(location, country, units) => {
+let fetchWeather = async(weatherInfo) => {
     const url = `http://api.openweathermap.org/data/2.5/weather`;
 
-    let queryByCityName = `q=${location},${country}&units=${units}&appid=${process.env.OPENWEATHER_API}`;
-    let queryByCityId = `q=${location},${country}&units=${units}&appid=${process.env.OPENWEATHER_API}`;
-    let queryByZip = `zip=${location},${country}&units=${units}&appid=${process.env.OPENWEATHER_API}`;
+    let queryByCityName = `q=${weatherInfo.location}&units=${weatherInfo.units}`;
+    let queryByCityId = `q=${weatherInfo.location}&units=${weatherInfo.units}`;
+    let queryByZip = `zip=${weatherInfo.zip}&units=${weatherInfo.units}`;
+
+    let query = '';
+
+    if (weatherInfo.zip) {
+        query = queryByZip;
+    } else if (weatherInfo.cityid) {
+        query = queryByCityId;
+    } else {
+        query = queryByCityName;
+    }
+
+    console.log(query);
 
     // console.log(queryByCityName);
 
-    let weatherRequest = url.concat('?', queryByCityName);
-    let weather = {};
+    let weatherRequest = url.concat('?', query, `&appid=${process.env.OPENWEATHER_API}`);
+    let weather = defaultWeatherInfo;
 
     try {
-        weather = await rp(weatherRequest);
-        // console.log(weather);
+        let res = await rp(weatherRequest);
 
-        return JSON.parse(weather);
-        // return weather;
+        let owResponse = JSON.parse(res);
+        // console.log(owResponse);
+
+        weather.country = owResponse.sys.country;
+        weather.location = owResponse.name;
+        weather.tempStr = `${Math.ceil(owResponse.main.temp)} ${weatherInfo.units === 'metric' ? '&#x2103': '&#8457'}`;
+        weather.temp = Math.ceil(owResponse.main.temp);
+        weather.icon = `http://openweathermap.org/img/w/${owResponse.weather[0].icon}.png`;
+        weather.zip = weatherInfo.zip;
+        weather.cityid = owResponse.sys.id;
+
+
+        console.log(weather);
+
+        return weather;
     } catch (err) {
-        console.log(err.message);
-        return {};
+        console.log('Error fetching weather: ' + err.message);
+        throw err;
     }
 }
 
 let parseTemplate = (template, attr) => {
 
-    return readFileAsync(path.join(__dirname, `../public/${template}.html`), 'utf8').then((text) => {
+    let templatePath = path.join(__dirname, `../public/${template}.html`);
+
+    return readFileAsync(templatePath, 'utf8').then((text) => {
         return st.createMarkup(text, attr);
     });
 }
@@ -55,22 +85,29 @@ let parseTemplate = (template, attr) => {
 exports.index = async(req, res) => {
     let str = 'Error fetching weather!!';
 
+    let weather = {
+        location: req.query.loc,
+        zip: req.query.zip,
+        cityid: req.query.cityid,
+        units: req.query.units
+    };
+
     try {
-        let weather = await fetchWeather(req.query.location, req.query.country, 'metric');
-        // str = `<html><body>Weather for <b>${weather.name} </b> is <b>${weather.main.temp} </b></body></html>`;
-
-        str = await parseTemplate('template1', weather);
-
-        console.log(str);
-
-
-        let img = await ci.createHtmlImage(str, 200, 200);
-
-        res.contentType('image/png');
-        res.contentLength = img.length;
-        res.end(img);
-
+        weather = await fetchWeather(weather);
     } catch (err) {
         console.log(err);
+        str = err;
     }
+
+    try {
+        str = await parseTemplate(req.query.template, weather);
+    } catch (err) {
+        console.log('Error parsing template!' + err);
+    }
+
+    let img = await ci.createHtmlImage(str, 200, 200);
+
+    res.contentType('image/png');
+    res.contentLength = img.length;
+    res.end(img);
 };
