@@ -23,7 +23,7 @@ let saveData = () => {
 
 
     sdk.setData(blockData, (updatedData) => {
-        let content = `<img src="https://dj-weather-sfmc-cb.herokuapp.com/weather.png?loc=${blockData.location}&template=${blockData.template}&units=${blockData.units}&width=${blockData.width}&height=${blockData.height}">`;
+        let content = `<img src="https://dj-weather-sfmc-cb.herokuapp.com/weather.png?loc=${blockData.location}&template=${blockData.template}&units=${blockData.units}" width="${blockData.width}" height="${blockData.height}">`;
 
         let superContent = defaultContent;
 
