@@ -59,7 +59,7 @@ let fetchWeather = async(weatherInfo) => {
         weather.tempStr = `${Math.ceil(owResponse.main.temp)} ${weatherInfo.units === 'metric' ? '&#x2103': '&#8457'}`;
         weather.temp = Math.ceil(owResponse.main.temp);
         weather.icon = `http://openweathermap.org/img/w/${owResponse.weather[0].icon}.png`;
-        weather.zip = weatherInfo.zip;
+        weather.zip = weatherInfo.zip || '';
         weather.cityid = owResponse.sys.id;
 
 
@@ -84,6 +84,7 @@ let parseTemplate = (template, attr) => {
 
 exports.index = async(req, res) => {
     let str = 'Error fetching weather!!';
+    let img = '';
 
     let weather = {
         location: req.query.loc,
@@ -105,8 +106,14 @@ exports.index = async(req, res) => {
         console.log('Error parsing template!' + err);
     }
 
-    let img = await ci.createHtmlImage(str, 200, 200);
+    try {
+        console.time("createHtmlImage");
+        img = await ci.createHtmlImage(str, 200, 200);
+        console.timeEnd("createHtmlImage");
+    } catch (err) {
 
+        console.log('Error creating image!' + err);
+    }
     res.contentType('image/png');
     res.contentLength = img.length;
     res.end(img);
