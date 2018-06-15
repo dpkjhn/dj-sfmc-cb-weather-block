@@ -79,7 +79,7 @@ let parseTemplate = (template, attr) => {
         __dirname);
 
 
-    return readFileAsync(templatePath, 'utf8').then((text) => {
+    return readFileAsync(templatePath.toLowerCase(), 'utf8').then((text) => {
         return st.createMarkup(text, attr);
     });
 }
