@@ -74,7 +74,10 @@ let fetchWeather = async(weatherInfo) => {
 
 let parseTemplate = (template, attr) => {
 
-    let templatePath = path.join(__dirname, `../public/templates/${template}.html`);
+    let templatePath = path.join(process.cwd(), `/public/templates/${template}.html`);
+    console.log('PATH: ' +
+        __dirname);
+
 
     return readFileAsync(templatePath, 'utf8').then((text) => {
         return st.createMarkup(text, attr);
