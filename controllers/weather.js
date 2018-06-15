@@ -74,7 +74,7 @@ let fetchWeather = async(weatherInfo) => {
 
 let parseTemplate = (template, attr) => {
 
-    let templatePath = path.join(__dirname, `/public/templates/${template}.html`);
+    let templatePath = path.join(__dirname, `../public/templates/${template}.html`);
     console.log('PATH: ' +
         __dirname);
 
