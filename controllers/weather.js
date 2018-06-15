@@ -111,7 +111,7 @@ exports.index = async(req, res) => {
 
     try {
         console.time("createHtmlImage");
-        img = await ci.createHtmlImage(str, 200, 200);
+        img = await ci.createHtmlImage(str, req.query.w, req.query.h);
         console.timeEnd("createHtmlImage");
 
         res.contentType('image/png');
