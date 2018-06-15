@@ -42,16 +42,19 @@ let fetchData = () => {
             if (Object.keys(dataCB).length > 0) {
                 blockData = dataCB;
             }
+
+            console.log(JSON.stringify(dataCB));
+
+
+            // console.log('Found data!');
+            document.getElementById('location').value = blockData.location;
+            document.getElementById('template').value = blockData.template;
+            document.getElementById('units').value = blockData.units;
+
+            document.getElementById('blockWidth').value = blockData.width;
+            document.getElementById('blockHeight').value = blockData.height;
         });
 
-
-        // console.log('Found data!');
-        document.getElementById('location').value = blockData.location;
-        document.getElementById('template').value = blockData.template;
-        document.getElementById('units').value = blockData.units;
-
-        document.getElementById('blockWidth').value = blockData.width;
-        document.getElementById('blockHeight').value = blockData.height;
 
     }
     // Event Handlers
