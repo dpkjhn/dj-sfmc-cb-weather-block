@@ -18,7 +18,7 @@ let saveData = () => {
     blockData.units = document.getElementById('units').value;
 
     sdk.setData(blockData, (updatedData) => {
-        let content = `<img src="https://dj-smfc-weather-block/weather.png?loc=${blockData.location}&template=${blockData.template}&units=${blockData.units}"`;
+        let content = `<img src="https://dj-weather-sfmc-cb.herokuapp.com/weather.png?loc=${blockData.location}&template=${blockData.template}&units=${blockData.units}"`;
         sdk.setContent(content);
     });
 }
