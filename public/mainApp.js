@@ -9,7 +9,7 @@ let blockData = {
     height: 200
 };
 
-let defaultContent = `<img src="icon.png">`;
+let defaultContent = `<img src="https://dj-weather-sfmc-cb.herokuapp.com/icon.png">`;
 
 
 let saveData = () => {
