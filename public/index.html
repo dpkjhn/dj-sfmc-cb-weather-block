@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Static Google Map</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.2/css/bootstrap-slider.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.2/bootstrap-slider.min.js"></script>
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <form class="form-horizontal">
+            <fieldset>
+                <legend>Configure Weather Parameters</legend>
+
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="location">Location</label>
+                            <div class="col-sm-4">
+                                <input id="location" name="location" type="text" placeholder="Location" class="form-control input-md" required="" value="London, UK">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-4">
+                                <select id="template" name="template" class="form-control">
+                                    <option value="text">Text</option>
+                                    <option value="simple">Simple</option>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+    </div>
+
+    </fieldset>
+    </form>
+
+    </div>
+
+    <script src="/blocksdk.js"></script>
+    <script src="/mainApp.js"></script>
+</body>
+
+</html>

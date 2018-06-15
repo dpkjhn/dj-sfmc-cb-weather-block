@@ -110,11 +110,14 @@ exports.index = async(req, res) => {
         console.time("createHtmlImage");
         img = await ci.createHtmlImage(str, 200, 200);
         console.timeEnd("createHtmlImage");
+
+        res.contentType('image/png');
+        res.contentLength = img.length;
+        res.end(img);
+
     } catch (err) {
 
         console.log('Error creating image!' + err);
     }
-    res.contentType('image/png');
-    res.contentLength = img.length;
-    res.end(img);
+
 };
