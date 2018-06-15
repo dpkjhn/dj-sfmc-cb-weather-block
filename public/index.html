@@ -29,20 +29,30 @@
                                 <input id="location" name="location" type="text" placeholder="Location" class="form-control input-md" required="" value="London, UK">
                             </div>
                         </div>
+
                         <div class="form-group">
+                            <label class="col-sm-4 control-label" for="units">Unit</label>
+                            <div class="col-sm-4">
+                                <select id="units" name="units" class="form-control">
+                                    <option value="metric">Metric (&#x2103)</option>
+                                    <option value="imperial">Imperial (&#8457)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="template">Template</label>
                             <div class="col-sm-4">
                                 <select id="template" name="template" class="form-control">
                                     <option value="text">Text</option>
                                     <option value="simple">Simple</option>
+                                </select>
                             </div>
                         </div>
                     </div>
-
                 </div>
-    </div>
-
-    </fieldset>
-    </form>
+            </fieldset>
+        </form>
 
     </div>
 
