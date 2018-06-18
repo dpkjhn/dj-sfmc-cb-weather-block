@@ -86,6 +86,9 @@ let parseTemplate = (template, attr) => {
 
 
 exports.index = async(req, res) => {
+
+    console.time("processWeatherRequest");
+
     let str = 'Error fetching weather!!';
     let img = '';
 
@@ -110,17 +113,14 @@ exports.index = async(req, res) => {
     }
 
     try {
-        console.time("createHtmlImage");
-        img = await ci.createHtmlImage(str, req.query.width, req.query.height);
-        console.timeEnd("createHtmlImage");
-
         res.contentType('image/png');
-        res.contentLength = img.length;
-        res.end(img);
-
+        console.time("createHtmlImage");
+        img = ci.createHtmlImageStream(str, req.query.width, req.query.height);
+        img.pipe(res);
+        console.timeEnd("createHtmlImage");
     } catch (err) {
 
         console.log('Error creating image!' + err);
     }
-
+    console.timeEnd("processWeatherRequest");
 };

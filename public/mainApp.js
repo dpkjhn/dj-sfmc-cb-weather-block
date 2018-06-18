@@ -2,7 +2,7 @@
 
 let sdk = new window.sfdc.BlockSDK(); //initalize SDK
 let blockData = {
-    location: 'London, UK',
+    location: 'London,UK',
     template: 'text',
     units: 'metric',
     width: 200,
@@ -54,8 +54,6 @@ let fetchData = () => {
             document.getElementById('blockWidth').value = blockData.width;
             document.getElementById('blockHeight').value = blockData.height;
         });
-
-
     }
     // Event Handlers
 window.onload = fetchData;
